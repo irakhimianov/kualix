@@ -9,7 +9,7 @@ from typing import Optional, Iterator
 
 from core import consts
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('core')
 
 
 class BaseClient:
@@ -63,6 +63,7 @@ class BaseClient:
                 'headers': {'Content-Type': 'application/json'},
             }
             try:
+                logger.info(f'Making request {self._url}...')
                 with request.urlopen(request.Request(**request_data), context=context) as response:
                     return json.loads(response.read().decode('utf-8'))
             except (error.HTTPError, ssl.SSLError) as e:
@@ -83,6 +84,7 @@ class BaseClient:
         """
         temp_file = NamedTemporaryFile(delete=False)
         try:
+            logger.info(f'Building temp file...')
             temp_file.write(data.encode('utf-8'))
             temp_file.close()
             yield temp_file
